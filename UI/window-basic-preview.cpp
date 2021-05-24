@@ -429,7 +429,7 @@ void OBSBasicPreview::GetStretchHandleData(const vec2 &pos, bool ignoreGroup)
 				    1.0f, RAD(-itemRot));
 
 		obs_sceneitem_get_crop(stretchItem, &startCrop);
-		obs_sceneitem_get_pos(stretchItem, &startItemPos);
+		obs_sceneitem_get_anchor(stretchItem, &startItemPos);
 
 		obs_source_t *source = obs_sceneitem_get_source(stretchItem);
 		cropSize.x = float(obs_source_get_width(source) -
@@ -919,9 +919,9 @@ static bool move_items(obs_scene_t *scene, obs_sceneitem_t *item, void *param)
 
 	if (selected) {
 		vec2 pos;
-		obs_sceneitem_get_pos(item, &pos);
+		obs_sceneitem_get_anchor(item, &pos);
 		vec2_add(&pos, &pos, offset);
-		obs_sceneitem_set_pos(item, &pos);
+		obs_sceneitem_set_anchor(item, &pos);
 	}
 
 	UNUSED_PARAMETER(scene);
@@ -1364,7 +1364,7 @@ void OBSBasicPreview::CropItem(const vec2 &pos)
 #if 0
 	vec3 curPos;
 	vec3_zero(&curPos);
-	obs_sceneitem_get_pos(stretchItem, (vec2*)&curPos);
+	obs_sceneitem_get_anchor(stretchItem, (vec2*)&curPos);
 	blog(LOG_DEBUG, "curPos {%d, %d} - newPos {%d, %d}",
 			int(curPos.x), int(curPos.y),
 			int(newPos.x), int(newPos.y));
@@ -1376,7 +1376,7 @@ void OBSBasicPreview::CropItem(const vec2 &pos)
 	obs_sceneitem_defer_update_begin(stretchItem);
 	obs_sceneitem_set_crop(stretchItem, &crop);
 	if (boundsType == OBS_BOUNDS_NONE)
-		obs_sceneitem_set_pos(stretchItem, (vec2 *)&newPos);
+		obs_sceneitem_set_anchor(stretchItem, (vec2 *)&newPos);
 	obs_sceneitem_defer_update_end(stretchItem);
 }
 
@@ -1447,7 +1447,7 @@ void OBSBasicPreview::StretchItem(const vec2 &pos)
 
 	vec2 newPos;
 	vec2_set(&newPos, std::round(pos3.x), std::round(pos3.y));
-	obs_sceneitem_set_pos(stretchItem, &newPos);
+	obs_sceneitem_set_anchor(stretchItem, &newPos);
 }
 
 void OBSBasicPreview::mouseMoveEvent(QMouseEvent *event)

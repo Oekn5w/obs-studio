@@ -7811,7 +7811,7 @@ static bool reset_tr(obs_scene_t *scene, obs_sceneitem_t *item, void *param)
 	obs_sceneitem_defer_update_begin(item);
 
 	obs_transform_info info;
-	vec2_set(&info.pos, 0.0f, 0.0f);
+	vec2_set(&info.anchor, 0.0f, 0.0f);
 	vec2_set(&info.scale, 1.0f, 1.0f);
 	info.rot = 0.0f;
 	info.alignment = OBS_ALIGN_TOP | OBS_ALIGN_LEFT;
@@ -7884,11 +7884,11 @@ static void SetItemTL(obs_sceneitem_t *item, const vec3 &tl)
 	vec3 newTL;
 	vec2 pos;
 
-	obs_sceneitem_get_pos(item, &pos);
+	obs_sceneitem_get_anchor(item, &pos);
 	newTL = GetItemTL(item);
 	pos.x += tl.x - newTL.x;
 	pos.y += tl.y - newTL.y;
-	obs_sceneitem_set_pos(item, &pos);
+	obs_sceneitem_set_anchor(item, &pos);
 }
 
 static bool RotateSelectedSources(obs_scene_t *scene, obs_sceneitem_t *item,
@@ -8056,7 +8056,7 @@ static bool CenterAlignSelectedItems(obs_scene_t *scene, obs_sceneitem_t *item,
 	obs_get_video_info(&ovi);
 
 	obs_transform_info itemInfo;
-	vec2_set(&itemInfo.pos, 0.0f, 0.0f);
+	vec2_set(&itemInfo.anchor, 0.0f, 0.0f);
 	vec2_set(&itemInfo.scale, 1.0f, 1.0f);
 	itemInfo.alignment = OBS_ALIGN_LEFT | OBS_ALIGN_TOP;
 	itemInfo.rot = 0.0f;
@@ -8150,9 +8150,9 @@ static bool center_to_scene(obs_scene_t *, obs_sceneitem_t *item, void *param)
 	vec3 itemTL = GetItemTL(item);
 
 	if (centerType == CenterType::Vertical)
-		tl.x = itemTL.x;
+		tl.x = oti.anchor.x;
 	else if (centerType == CenterType::Horizontal)
-		tl.y = itemTL.y;
+		tl.y = oti.anchor.y;
 
 	SetItemTL(item, tl);
 	return true;
@@ -8268,9 +8268,9 @@ static bool nudge_callback(obs_scene_t *, obs_sceneitem_t *item, void *param)
 		return true;
 	}
 
-	obs_sceneitem_get_pos(item, &pos);
+	obs_sceneitem_get_anchor(item, &pos);
 	vec2_add(&pos, &pos, &offset);
-	obs_sceneitem_set_pos(item, &pos);
+	obs_sceneitem_set_anchor(item, &pos);
 	return true;
 }
 

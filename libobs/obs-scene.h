@@ -50,7 +50,7 @@ struct obs_scene_item {
 	gs_texrender_t *item_render;
 	struct obs_sceneitem_crop crop;
 
-	struct vec2 pos;
+	struct vec2 anchor;
 	struct vec2 scale;
 	float rot;
 	uint32_t align;

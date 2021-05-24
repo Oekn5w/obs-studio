@@ -137,7 +137,7 @@ enum obs_bounds_type {
 };
 
 struct obs_transform_info {
-	struct vec2 pos;
+	struct vec2 anchor;
 	float rot;
 	struct vec2 scale;
 	uint32_t alignment;
@@ -1687,8 +1687,8 @@ EXPORT bool obs_sceneitem_locked(const obs_sceneitem_t *item);
 EXPORT bool obs_sceneitem_set_locked(obs_sceneitem_t *item, bool lock);
 
 /* Functions for getting/setting specific orientation of a scene item */
-EXPORT void obs_sceneitem_set_pos(obs_sceneitem_t *item,
-				  const struct vec2 *pos);
+EXPORT void obs_sceneitem_set_anchor(obs_sceneitem_t *item,
+				     const struct vec2 *anchor);
 EXPORT void obs_sceneitem_set_rot(obs_sceneitem_t *item, float rot_deg);
 EXPORT void obs_sceneitem_set_scale(obs_sceneitem_t *item,
 				    const struct vec2 *scale);
@@ -1707,8 +1707,8 @@ EXPORT void obs_sceneitem_set_bounds(obs_sceneitem_t *item,
 
 EXPORT int64_t obs_sceneitem_get_id(const obs_sceneitem_t *item);
 
-EXPORT void obs_sceneitem_get_pos(const obs_sceneitem_t *item,
-				  struct vec2 *pos);
+EXPORT void obs_sceneitem_get_anchor(const obs_sceneitem_t *item,
+				     struct vec2 *anchor);
 EXPORT float obs_sceneitem_get_rot(const obs_sceneitem_t *item);
 EXPORT void obs_sceneitem_get_scale(const obs_sceneitem_t *item,
 				    struct vec2 *scale);

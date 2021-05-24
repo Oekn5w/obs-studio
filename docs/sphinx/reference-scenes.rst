@@ -337,10 +337,10 @@ Scene Item Functions
 
 ---------------------
 
-.. function:: void obs_sceneitem_set_pos(obs_sceneitem_t *item, const struct vec2 *pos)
-              void obs_sceneitem_get_pos(const obs_sceneitem_t *item, struct vec2 *pos)
+.. function:: void obs_sceneitem_set_anchor(obs_sceneitem_t *item, const struct vec2 *anchor)
+              void obs_sceneitem_get_anchor(const obs_sceneitem_t *item, struct vec2 *anchor)
 
-   Sets/gets the position of a scene item.
+   Sets/gets the transformation anchor of a scene item.
 
 ---------------------
 

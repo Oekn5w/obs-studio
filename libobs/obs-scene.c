@@ -29,7 +29,7 @@ static void resize_group(obs_sceneitem_t *group);
 static void resize_scene(obs_scene_t *scene);
 static void signal_parent(obs_scene_t *parent, const char *name,
 			  calldata_t *params);
-static void get_ungrouped_transform(obs_sceneitem_t *group, struct vec2 *pos,
+static void get_ungrouped_transform(obs_sceneitem_t *group, struct vec2 *anchor,
 				    struct vec2 *scale, float *rot);
 static inline bool crop_enabled(const struct obs_sceneitem_crop *crop);
 static inline bool item_texture_enabled(const struct obs_scene_item *item);
@@ -402,7 +402,7 @@ static void update_item_transform(struct obs_scene_item *item, bool update_tex)
 	matrix4_rotate_aa4f(&item->draw_transform, &item->draw_transform, 0.0f,
 			    0.0f, 1.0f, RAD(item->rot));
 	matrix4_translate3f(&item->draw_transform, &item->draw_transform,
-			    item->pos.x, item->pos.y, 0.0f);
+			    item->anchor.x, item->anchor.y, 0.0f);
 
 	item->output_scale = scale;
 
@@ -427,7 +427,7 @@ static void update_item_transform(struct obs_scene_item *item, bool update_tex)
 	matrix4_rotate_aa4f(&item->box_transform, &item->box_transform, 0.0f,
 			    0.0f, 1.0f, RAD(item->rot));
 	matrix4_translate3f(&item->box_transform, &item->box_transform,
-			    item->pos.x, item->pos.y, 0.0f);
+			    item->anchor.x, item->anchor.y, 0.0f);
 
 	/* ----------------------- */
 
@@ -831,7 +831,7 @@ static void scene_load_item(struct obs_scene *scene, obs_data_t *item_data)
 	item->align = (uint32_t)obs_data_get_int(item_data, "align");
 	visible = obs_data_get_bool(item_data, "visible");
 	lock = obs_data_get_bool(item_data, "locked");
-	obs_data_get_vec2(item_data, "pos", &item->pos);
+	obs_data_get_vec2(item_data, "anchor", &item->anchor);
 	obs_data_get_vec2(item_data, "scale", &item->scale);
 
 	obs_data_release(item->private_settings);
@@ -940,19 +940,19 @@ static void scene_save_item(obs_data_array_t *array,
 	obs_data_t *item_data = obs_data_create();
 	const char *name = obs_source_get_name(item->source);
 	const char *scale_filter;
-	struct vec2 pos = item->pos;
+	struct vec2 anchor = item->anchor;
 	struct vec2 scale = item->scale;
 	float rot = item->rot;
 
 	if (backup_group) {
-		get_ungrouped_transform(backup_group, &pos, &scale, &rot);
+		get_ungrouped_transform(backup_group, &anchor, &scale, &rot);
 	}
 
 	obs_data_set_string(item_data, "name", name);
 	obs_data_set_bool(item_data, "visible", item->user_visible);
 	obs_data_set_bool(item_data, "locked", item->locked);
 	obs_data_set_double(item_data, "rot", rot);
-	obs_data_set_vec2(item_data, "pos", &pos);
+	obs_data_set_vec2(item_data, "anchor", &anchor);
 	obs_data_set_vec2(item_data, "scale", &scale);
 	obs_data_set_int(item_data, "align", (int)item->align);
 	obs_data_set_int(item_data, "bounds_type", (int)item->bounds_type);
@@ -1140,22 +1140,22 @@ static void process_all_audio_actions(struct obs_scene_item *item,
 }
 
 static void mix_audio_with_buf(float *p_out, float *p_in, float *buf_in,
-			       size_t pos, size_t count)
+			       size_t anchor, size_t count)
 {
 	register float *out = p_out;
-	register float *buf = buf_in + pos;
-	register float *in = p_in + pos;
+	register float *buf = buf_in + anchor;
+	register float *in = p_in + anchor;
 	register float *end = in + count;
 
 	while (in < end)
 		*(out++) += *(in++) * *(buf++);
 }
 
-static inline void mix_audio(float *p_out, float *p_in, size_t pos,
+static inline void mix_audio(float *p_out, float *p_in, size_t anchor,
 			     size_t count)
 {
 	register float *out = p_out;
-	register float *in = p_in + pos;
+	register float *in = p_in + anchor;
 	register float *end = in + count;
 
 	while (in < end)
@@ -1214,7 +1214,7 @@ static bool scene_audio_render(void *data, uint64_t *ts_out,
 	item = scene->first_item;
 	while (item) {
 		uint64_t source_ts;
-		size_t pos, count;
+		size_t anchor, count;
 		bool apply_buf;
 		struct obs_source *source;
 		if (item->visible && transition_active(item->show_transition))
@@ -1239,9 +1239,9 @@ static bool scene_audio_render(void *data, uint64_t *ts_out,
 			continue;
 		}
 
-		pos = (size_t)ns_to_audio_frames(sample_rate,
-						 source_ts - timestamp);
-		count = AUDIO_OUTPUT_FRAMES - pos;
+		anchor = (size_t)ns_to_audio_frames(sample_rate,
+						    source_ts - timestamp);
+		count = AUDIO_OUTPUT_FRAMES - anchor;
 
 		if (!apply_buf && !item->visible &&
 		    !transition_active(item->hide_transition)) {
@@ -1260,10 +1260,10 @@ static bool scene_audio_render(void *data, uint64_t *ts_out,
 				float *in = child_audio.output[mix].data[ch];
 
 				if (apply_buf)
-					mix_audio_with_buf(out, in, buf, pos,
+					mix_audio_with_buf(out, in, buf, anchor,
 							   count);
 				else
-					mix_audio(out, in, pos, count);
+					mix_audio(out, in, anchor, count);
 			}
 		}
 
@@ -1388,7 +1388,7 @@ static inline void duplicate_item_data(struct obs_scene_item *dst,
 		set_visibility(dst, false);
 
 	dst->selected = src->selected;
-	dst->pos = src->pos;
+	dst->anchor = src->anchor;
 	dst->rot = src->rot;
 	dst->scale = src->scale;
 	dst->align = src->align;
@@ -2059,7 +2059,7 @@ bool save_transform_states(obs_scene_t *scene, obs_sceneitem_t *item,
 		obs_sceneitem_get_info(item, &info);
 		obs_sceneitem_get_crop(item, &crop);
 
-		struct vec2 pos = info.pos;
+		struct vec2 anchor = info.anchor;
 		struct vec2 scale = info.scale;
 		float rot = info.rot;
 		uint32_t alignment = info.alignment;
@@ -2068,7 +2068,7 @@ bool save_transform_states(obs_scene_t *scene, obs_sceneitem_t *item,
 		struct vec2 bounds = info.bounds;
 
 		obs_data_set_int(temp, "id", obs_sceneitem_get_id(item));
-		obs_data_set_vec2(temp, "pos", &pos);
+		obs_data_set_vec2(temp, "anchor", &anchor);
 		obs_data_set_vec2(temp, "scale", &scale);
 		obs_data_set_double(temp, "rot", rot);
 		obs_data_set_int(temp, "alignment", alignment);
@@ -2151,7 +2151,7 @@ void load_transform_states(obs_data_t *temp, void *vp_scene)
 
 	struct obs_transform_info info;
 	struct obs_sceneitem_crop crop;
-	obs_data_get_vec2(temp, "pos", &info.pos);
+	obs_data_get_vec2(temp, "anchor", &info.anchor);
 	obs_data_get_vec2(temp, "scale", &info.scale);
 	info.rot = (float)obs_data_get_double(temp, "rot");
 	info.alignment = (uint32_t)obs_data_get_int(temp, "alignment");
@@ -2243,10 +2243,10 @@ bool obs_sceneitem_selected(const obs_sceneitem_t *item)
 			update_item_transform(item, false);                \
 	} while (false)
 
-void obs_sceneitem_set_pos(obs_sceneitem_t *item, const struct vec2 *pos)
+void obs_sceneitem_set_anchor(obs_sceneitem_t *item, const struct vec2 *anchor)
 {
 	if (item) {
-		vec2_copy(&item->pos, pos);
+		vec2_copy(&item->anchor, anchor);
 		do_update_transform(item);
 	}
 }
@@ -2419,10 +2419,10 @@ void obs_sceneitem_set_bounds(obs_sceneitem_t *item, const struct vec2 *bounds)
 	}
 }
 
-void obs_sceneitem_get_pos(const obs_sceneitem_t *item, struct vec2 *pos)
+void obs_sceneitem_get_anchor(const obs_sceneitem_t *item, struct vec2 *anchor)
 {
 	if (item)
-		vec2_copy(pos, &item->pos);
+		vec2_copy(anchor, &item->anchor);
 }
 
 float obs_sceneitem_get_rot(const obs_sceneitem_t *item)
@@ -2461,7 +2461,7 @@ void obs_sceneitem_get_info(const obs_sceneitem_t *item,
 			    struct obs_transform_info *info)
 {
 	if (item && info) {
-		info->pos = item->pos;
+		info->anchor = item->anchor;
 		info->rot = item->rot;
 		info->scale = item->scale;
 		info->alignment = item->align;
@@ -2475,7 +2475,7 @@ void obs_sceneitem_set_info(obs_sceneitem_t *item,
 			    const struct obs_transform_info *info)
 {
 	if (item && info) {
-		item->pos = info->pos;
+		item->anchor = info->anchor;
 		item->rot = info->rot;
 		item->scale = info->scale;
 		item->align = info->alignment;
@@ -2851,7 +2851,7 @@ static inline void transform_val(struct vec2 *v2, struct matrix4 *transform)
 	v2->y = v.y;
 }
 
-static void get_ungrouped_transform(obs_sceneitem_t *group, struct vec2 *pos,
+static void get_ungrouped_transform(obs_sceneitem_t *group, struct vec2 *anchor,
 				    struct vec2 *scale, float *rot)
 {
 	struct matrix4 transform;
@@ -2862,7 +2862,7 @@ static void get_ungrouped_transform(obs_sceneitem_t *group, struct vec2 *pos,
 
 	matrix4_copy(&transform, &group->draw_transform);
 
-	transform_val(pos, &transform);
+	transform_val(anchor, &transform);
 	vec4_set(&transform.t, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	vec4_set(&mat.x, scale->x, 0.0f, 0.0f, 0.0f);
@@ -2883,7 +2883,7 @@ static void remove_group_transform(obs_sceneitem_t *group,
 	if (!parent || !group)
 		return;
 
-	get_ungrouped_transform(group, &item->pos, &item->scale, &item->rot);
+	get_ungrouped_transform(group, &item->anchor, &item->scale, &item->rot);
 
 	update_item_transform(item, false);
 }
@@ -2898,7 +2898,7 @@ static void apply_group_transform(obs_sceneitem_t *item, obs_sceneitem_t *group)
 
 	matrix4_inv(&transform, &group->draw_transform);
 
-	transform_val(&item->pos, &transform);
+	transform_val(&item->anchor, &transform);
 	vec4_set(&transform.t, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	vec4_set(&mat.x, item->scale.x, 0.0f, 0.0f, 0.0f);
@@ -2956,7 +2956,7 @@ static bool resize_scene_base(obs_scene_t *scene, struct vec2 *minv,
 
 	item = scene->first_item;
 	while (item) {
-		vec2_sub(&item->pos, &item->pos, minv);
+		vec2_sub(&item->anchor, &item->anchor, minv);
 		update_item_transform(item, false);
 		item = item->next;
 	}
@@ -2990,24 +2990,24 @@ static void resize_group(obs_sceneitem_t *group)
 		return;
 
 	if (group->bounds_type == OBS_BOUNDS_NONE) {
-		struct vec2 new_pos;
+		struct vec2 new_anchor;
 
 		if ((group->align & OBS_ALIGN_LEFT) != 0)
-			new_pos.x = minv.x;
+			new_anchor.x = minv.x;
 		else if ((group->align & OBS_ALIGN_RIGHT) != 0)
-			new_pos.x = maxv.x;
+			new_anchor.x = maxv.x;
 		else
-			new_pos.x = (maxv.x - minv.x) * 0.5f + minv.x;
+			new_anchor.x = (maxv.x - minv.x) * 0.5f + minv.x;
 
 		if ((group->align & OBS_ALIGN_TOP) != 0)
-			new_pos.y = minv.y;
+			new_anchor.y = minv.y;
 		else if ((group->align & OBS_ALIGN_BOTTOM) != 0)
-			new_pos.y = maxv.y;
+			new_anchor.y = maxv.y;
 		else
-			new_pos.y = (maxv.y - minv.y) * 0.5f + minv.y;
+			new_anchor.y = (maxv.y - minv.y) * 0.5f + minv.y;
 
-		transform_val(&new_pos, &group->draw_transform);
-		vec2_copy(&group->pos, &new_pos);
+		transform_val(&new_anchor, &group->draw_transform);
+		vec2_copy(&group->anchor, &new_anchor);
 	}
 
 	os_atomic_set_bool(&group->update_group_resize, false);

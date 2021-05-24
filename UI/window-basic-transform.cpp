@@ -47,8 +47,8 @@ OBSBasicTransform::OBSBasicTransform(OBSBasic *parent)
 
 	ui->setupUi(this);
 
-	HookWidget(ui->positionX, DSCROLL_CHANGED, SLOT(OnControlChanged()));
-	HookWidget(ui->positionY, DSCROLL_CHANGED, SLOT(OnControlChanged()));
+	HookWidget(ui->trafoAnchorX, DSCROLL_CHANGED, SLOT(OnControlChanged()));
+	HookWidget(ui->trafoAnchorY, DSCROLL_CHANGED, SLOT(OnControlChanged()));
 	HookWidget(ui->rotation, DSCROLL_CHANGED, SLOT(OnControlChanged()));
 	HookWidget(ui->sizeX, DSCROLL_CHANGED, SLOT(OnControlChanged()));
 	HookWidget(ui->sizeY, DSCROLL_CHANGED, SLOT(OnControlChanged()));
@@ -252,8 +252,8 @@ void OBSBasicTransform::RefreshControls()
 
 	ignoreItemChange = true;
 
-	ui->positionX->setValue(osi.pos.x);
-	ui->positionY->setValue(osi.pos.y);
+	ui->trafoAnchorX->setValue(osi.anchor.x);
+	ui->trafoAnchorX->setValue(osi.anchor.y);
 	ui->rotation->setValue(osi.rot);
 	ui->sizeX->setValue(osi.scale.x * width);
 	ui->sizeY->setValue(osi.scale.y * height);
@@ -314,8 +314,8 @@ void OBSBasicTransform::OnControlChanged()
 	double height = double(obs_source_get_height(source));
 
 	obs_transform_info oti;
-	oti.pos.x = float(ui->positionX->value());
-	oti.pos.y = float(ui->positionY->value());
+	oti.anchor.x = float(ui->trafoAnchorX->value());
+	oti.anchor.y = float(ui->trafoAnchorY->value());
 	oti.rot = float(ui->rotation->value());
 	oti.scale.x = float(ui->sizeX->value() / width);
 	oti.scale.y = float(ui->sizeY->value() / height);
@@ -345,8 +345,8 @@ void OBSBasicTransform::OnAlignmentChanged()
 
 	ignoreItemChange = true;
 
-	ui->positionX->setValue(oti_save.pos.x + offset.x);
-	ui->positionY->setValue(oti_save.pos.y + offset.y);
+	ui->trafoAnchorX->setValue(oti_save.anchor.x + offset.x);
+	ui->trafoAnchorX->setValue(oti_save.anchor.y + offset.y);
 
 	ignoreItemChange = false;
 	OnControlChanged();

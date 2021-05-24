@@ -178,7 +178,8 @@ references a source, you call :c:func:`obs_scene_add()`, which returns a
 new reference to a scene item.
 
 To change the transform of a scene item, you typically would call a
-function like :c:func:`obs_sceneitem_set_pos()` to change its position,
+function like :c:func:`obs_sceneitem_set_anchor()` to change its
+tranformation anchor,
 :c:func:`obs_sceneitem_set_rot()` to change its rotation, or
 :c:func:`obs_sceneitem_set_scale()` to change its scaling.  Scene items
 can also force scaling in to a custom size constraint referred to as a
