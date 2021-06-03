@@ -40,6 +40,8 @@ private:
 	static void OBSSceneItemSelect(void *param, calldata_t *data);
 	static void OBSSceneItemDeselect(void *param, calldata_t *data);
 
+	static QString getScalingText(float number);
+
 private slots:
 	void RefreshControls();
 	void SetItemQt(OBSSceneItem newItem);

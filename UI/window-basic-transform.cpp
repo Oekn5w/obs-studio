@@ -1,4 +1,5 @@
 #include <QMessageBox>
+#include "qt-wrappers.hpp"
 #include "window-basic-transform.hpp"
 #include "window-basic-main.hpp"
 
@@ -210,6 +211,11 @@ void OBSBasicTransform::OBSSceneItemDeselect(void *param, calldata_t *data)
 	}
 }
 
+QString OBSBasicTransform::getScalingText(float number)
+{
+	return QString("%1%").arg(QString::number(100.0f * number, 'f', 2));
+}
+
 static const uint32_t listToAlign[] = {OBS_ALIGN_TOP | OBS_ALIGN_LEFT,
 				       OBS_ALIGN_TOP,
 				       OBS_ALIGN_TOP | OBS_ALIGN_RIGHT,
@@ -257,6 +263,10 @@ void OBSBasicTransform::RefreshControls()
 	ui->rotation->setValue(osi.rot);
 	ui->sizeX->setValue(osi.scale.x * width);
 	ui->sizeY->setValue(osi.scale.y * height);
+	ui->sizeOrgX->setText(QString::number(width));
+	ui->sizeOrgY->setText(QString::number(height));
+	ui->sizeScaleX->setText(getScalingText(osi.scale.x));
+	ui->sizeScaleY->setText(getScalingText(osi.scale.y));
 	ui->align->setCurrentIndex(alignIndex);
 
 	ui->boundsType->setCurrentIndex(int(osi.bounds_type));
@@ -318,7 +328,9 @@ void OBSBasicTransform::OnControlChanged()
 	oti.anchor.y = float(ui->trafoAnchorY->value());
 	oti.rot = float(ui->rotation->value());
 	oti.scale.x = float(ui->sizeX->value() / width);
+	ui->sizeScaleX->setText(getScalingText(oti.scale.x));
 	oti.scale.y = float(ui->sizeY->value() / height);
+	ui->sizeScaleY->setText(getScalingText(oti.scale.y));
 	oti.alignment = listToAlign[ui->align->currentIndex()];
 
 	oti.bounds_type = (obs_bounds_type)ui->boundsType->currentIndex();
