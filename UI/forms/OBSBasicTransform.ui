@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>705</width>
-    <height>571</height>
+    <height>559</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -152,17 +152,20 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="accessibleName">
-        <string>Basic.TransformWindow.Size</string>
+     <item row="2" column="1">
+      <spacer name="verticalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
        </property>
-       <property name="text">
-        <string>Basic.TransformWindow.Size</string>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>13</width>
+         <height>13</height>
+        </size>
        </property>
-      </widget>
+      </spacer>
      </item>
-     <item row="4" column="1">
+     <item row="3" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QDoubleSpinBox" name="sizeX">
@@ -229,17 +232,17 @@
        </item>
       </layout>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_13">
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_3">
        <property name="accessibleName">
-        <string>Basic.TransformWindow.SizeOriginal</string>
+        <string>Basic.TransformWindow.Size</string>
        </property>
        <property name="text">
-        <string>Basic.TransformWindow.SizeOriginal</string>
+        <string>Basic.TransformWindow.Size</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="1">
+     <item row="4" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0">
        <property name="leftMargin">
         <number>0</number>
@@ -315,17 +318,17 @@
        </item>
       </layout>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_14">
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_13">
        <property name="accessibleName">
-        <string>Basic.TransformWindow.SizeScale</string>
+        <string>Basic.TransformWindow.SizeOriginal</string>
        </property>
        <property name="text">
-        <string>Basic.TransformWindow.SizeScale</string>
+        <string>Basic.TransformWindow.SizeOriginal</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
+     <item row="5" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,0">
        <property name="leftMargin">
         <number>0</number>
@@ -398,7 +401,30 @@
        </item>
       </layout>
      </item>
-     <item row="8" column="1">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_14">
+       <property name="accessibleName">
+        <string>Basic.TransformWindow.SizeScale</string>
+       </property>
+       <property name="text">
+        <string>Basic.TransformWindow.SizeScale</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <spacer name="verticalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>13</width>
+         <height>13</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="7" column="1">
       <widget class="QComboBox" name="align">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -459,17 +485,7 @@
        </item>
       </widget>
      </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="accessibleName">
-        <string>Basic.TransformWindow.Alignment</string>
-       </property>
-       <property name="text">
-        <string>Basic.TransformWindow.Alignment</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
+     <item row="8" column="1">
       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0" columnminimumwidth="0,0,0,0">
        <item row="0" column="1">
         <widget class="QRadioButton" name="rbAlignTC">
@@ -717,7 +733,17 @@
        </item>
       </layout>
      </item>
-     <item row="10" column="1">
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="accessibleName">
+        <string>Basic.TransformWindow.Alignment</string>
+       </property>
+       <property name="text">
+        <string>Basic.TransformWindow.Alignment</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
       <spacer name="verticalSpacer">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -733,17 +759,7 @@
        </property>
       </spacer>
      </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="accessibleName">
-        <string>Basic.TransformWindow.BoundsType</string>
-       </property>
-       <property name="text">
-        <string>Basic.TransformWindow.BoundsType</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="1">
+     <item row="10" column="1">
       <widget class="QComboBox" name="boundsType">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -791,17 +807,17 @@
        </item>
       </widget>
      </item>
-     <item row="12" column="0">
-      <widget class="QLabel" name="label_6">
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_5">
        <property name="accessibleName">
-        <string>Basic.TransformWindow.BoundsAlignment</string>
+        <string>Basic.TransformWindow.BoundsType</string>
        </property>
        <property name="text">
-        <string>Basic.TransformWindow.BoundsAlignment</string>
+        <string>Basic.TransformWindow.BoundsType</string>
        </property>
       </widget>
      </item>
-     <item row="12" column="1">
+     <item row="11" column="1">
       <widget class="QComboBox" name="boundsAlign">
        <property name="enabled">
         <bool>false</bool>
@@ -865,17 +881,17 @@
        </item>
       </widget>
      </item>
-     <item row="13" column="0">
-      <widget class="QLabel" name="label_7">
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_6">
        <property name="accessibleName">
-        <string>Basic.TransformWindow.Bounds</string>
+        <string>Basic.TransformWindow.BoundsAlignment</string>
        </property>
        <property name="text">
-        <string>Basic.TransformWindow.Bounds</string>
+        <string>Basic.TransformWindow.BoundsAlignment</string>
        </property>
       </widget>
      </item>
-     <item row="13" column="1">
+     <item row="12" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QDoubleSpinBox" name="boundsWidth">
@@ -942,7 +958,17 @@
        </item>
       </layout>
      </item>
-     <item row="14" column="1">
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="accessibleName">
+        <string>Basic.TransformWindow.Bounds</string>
+       </property>
+       <property name="text">
+        <string>Basic.TransformWindow.Bounds</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
       <spacer name="verticalSpacer_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
@@ -955,17 +981,7 @@
        </property>
       </spacer>
      </item>
-     <item row="16" column="0">
-      <widget class="QLabel" name="label_8">
-       <property name="accessibleName">
-        <string>Basic.TransformWindow.Crop</string>
-       </property>
-       <property name="text">
-        <string>Basic.TransformWindow.Crop</string>
-       </property>
-      </widget>
-     </item>
-     <item row="16" column="1">
+     <item row="14" column="1">
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="1">
         <widget class="QSpinBox" name="cropLeft">
@@ -1122,31 +1138,15 @@
        </item>
       </layout>
      </item>
-     <item row="7" column="1">
-      <spacer name="verticalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
+     <item row="14" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="accessibleName">
+        <string>Basic.TransformWindow.Crop</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>13</width>
-         <height>13</height>
-        </size>
+       <property name="text">
+        <string>Basic.TransformWindow.Crop</string>
        </property>
-      </spacer>
-     </item>
-     <item row="2" column="1">
-      <spacer name="verticalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>13</width>
-         <height>13</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
     </layout>
    </item>
@@ -1173,20 +1173,17 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>boundsType</tabstop>
   <tabstop>rbAlignCL</tabstop>
   <tabstop>rotation</tabstop>
   <tabstop>trafoAnchorX</tabstop>
   <tabstop>trafoAnchorY</tabstop>
   <tabstop>sizeX</tabstop>
   <tabstop>sizeY</tabstop>
-  <tabstop>align</tabstop>
   <tabstop>rbAlignTC</tabstop>
   <tabstop>rbAlignBL</tabstop>
   <tabstop>rbAlignTR</tabstop>
   <tabstop>rbAlignCR</tabstop>
   <tabstop>rbAlignBR</tabstop>
-  <tabstop>boundsAlign</tabstop>
   <tabstop>rbAlignCC</tabstop>
   <tabstop>rbAlignBC</tabstop>
   <tabstop>rbAlignTL</tabstop>
